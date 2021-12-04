@@ -37,14 +37,14 @@ class Pulsesensor:
         rate = [0] * 10         # tableau pour contenir les 10 dernières valeurs IBI
         sampleCounter = 0       #utilisé pour déterminer la synchronisation des impulsions
         lastBeatTime = 0        # utilisé pour trouver IBI
-        P = 512                 # utilisé pour trouver le pic dans l'onde de pouls, ensemencé
-        T = 512                 #utilisé pour trouver le creux dans l'onde de pouls, ensemencé
-        thresh = 525            #utilisé pour trouver un moment de battement cardiaque instantané, ensemencé
-        amp = 100               #utilisé pour maintenir l'amplitude de la forme d'onde d'impulsion, ensemencée
-        firstBeat = True        #utilisé pour amorcer le tableau de taux afin que nous démarrons avec un BPM raisonnable
-        secondBeat = False      #utilisé pour amorcer le tableau de taux afin que nous démarrons avec un BPM raisonnable
+        P = 512                 # utilisé pour trouver le pic dans l'onde de pouls
+        T = 512                 #utilisé pour trouver le creux dans l'onde de pouls
+        thresh = 525            #utilisé pour trouver un moment de battement cardiaque instantané
+        amp = 100               #utilisé pour maintenir l'amplitude de la forme d'onde d'impulsion
+        firstBeat = True        #utilisé pour le tableau de taux afin que nous démarrons avec un BPM raisonnable
+        secondBeat = False      #utilisé pour le tableau de taux afin que nous démarrons avec un BPM raisonnable
 
-        IBI = 600               #int qui contient l'intervalle de temps entre les battements ! Doit être ensemencé!
+        IBI = 600               #int qui contient l'intervalle de temps entre les battements !
         Pulse = False           #« True » lorsque le rythme cardiaque en direct de l'utilisateur est détecté. "False" quand ce n'est pas un "live beat". 
         lastTime = int(time.time()*1000)
         
