@@ -97,26 +97,25 @@ class Pulsesensor:
                 P = thresh                              # reset these for next time
                 T = thresh
 
-            if N > 2500:                                # if 2.5 seconds go by without a beat
-                thresh = 512                            # set thresh default
-                P = 512                                 # set P default
-                T = 512                                 # set T default
-                lastBeatTime = sampleCounter            # bring the lastBeatTime up to date        
-                firstBeat = True                        # set these to avoid noise
-                secondBeat = False                      # when we get the heartbeat back
+            if N > 2500:                                #si 2,5 secondes s'écoulent sans un battement
+                thresh = 512                            #définir le seuil par défaut
+                P = 512                                 #définir P par défaut
+                T = 512                                 # définir T par défaut
+                lastBeatTime = sampleCounter            # mettre à jour le lastBeatTime        
+                firstBeat = True                        # réglez-les pour éviter le bruit
+                secondBeat = False                      #quand on retrouve le rythme cardiaque
                 self.BPM = 0
 
             time.sleep(0.005)
             
-        
-    # Start getBPMLoop routine which saves the BPM in its variable
+# Lancer la routine getBPMLoop qui enregistre le BPM dans sa variable
     def startAsyncBPM(self):
         self.thread = threading.Thread(target=self.getBPMLoop)
         self.thread.stopped = False
         self.thread.start()
         return
         
-    # Stop the routine
+    #Arrêtez la routine
     def stopAsyncBPM(self):
         self.thread.stopped = True
         self.BPM = 0
