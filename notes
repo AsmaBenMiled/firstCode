@@ -1,1 +1,2 @@
-1) 
+1)installation de spidev : L’ADC utilise le Bibliothèque SpiDev, qui doit être installé.
+2)p.startAsyncBPM() une fil est démarré, qui mesure le pouls en arrière-plan, par p.stopAsyncBPM() vous pouvez arrêter ce fil – et donc la mesure
