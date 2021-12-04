@@ -21,7 +21,8 @@ class MCP3008:
             
     def close(self):
         self.spi.close()
- import time
+        
+import time
 import threading
 from MCP3008 import MCP3008
 
@@ -120,4 +121,21 @@ class Pulsesensor:
         self.thread.stopped = True
         self.BPM = 0
         return
+   
+from pulsesensor import Pulsesensor
+import time
+
+p = Pulsesensor()
+p.startAsyncBPM()
+
+try:
+    while True:
+        bpm = p.BPM
+        if bpm > 0:
+            print("BPM: %d" % bpm)
+        else:
+            print("No Heartbeat found")
+        time.sleep(1)
+except:
+    p.stopAsyncBPM()
         
