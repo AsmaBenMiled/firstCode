@@ -34,10 +34,10 @@ class Pulsesensor:
 
     def getBPMLoop(self):
         # init variables
-        rate = [0] * 10         # array to hold last 10 IBI values
-        sampleCounter = 0       # used to determine pulse timing
-        lastBeatTime = 0        # used to find IBI
-        P = 512                 # used to find peak in pulse wave, seeded
+        rate = [0] * 10         # tableau pour contenir les 10 dernières valeurs IBI
+        sampleCounter = 0       #utilisé pour déterminer la synchronisation des impulsions
+        lastBeatTime = 0        # utilisé pour trouver IBI
+        P = 512                 # utilisé pour trouver le pic dans l'onde de pouls, ensemencé
         T = 512                 # used to find trough in pulse wave, seeded
         thresh = 525            # used to find instant moment of heart beat, seeded
         amp = 100               # used to hold amplitude of pulse waveform, seeded
