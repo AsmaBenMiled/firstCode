@@ -38,14 +38,14 @@ class Pulsesensor:
         sampleCounter = 0       #utilisé pour déterminer la synchronisation des impulsions
         lastBeatTime = 0        # utilisé pour trouver IBI
         P = 512                 # utilisé pour trouver le pic dans l'onde de pouls, ensemencé
-        T = 512                 # used to find trough in pulse wave, seeded
-        thresh = 525            # used to find instant moment of heart beat, seeded
-        amp = 100               # used to hold amplitude of pulse waveform, seeded
-        firstBeat = True        # used to seed rate array so we startup with reasonable BPM
-        secondBeat = False      # used to seed rate array so we startup with reasonable BPM
+        T = 512                 #utilisé pour trouver le creux dans l'onde de pouls, ensemencé
+        thresh = 525            #utilisé pour trouver un moment de battement cardiaque instantané, ensemencé
+        amp = 100               #utilisé pour maintenir l'amplitude de la forme d'onde d'impulsion, ensemencée
+        firstBeat = True        #utilisé pour amorcer le tableau de taux afin que nous démarrons avec un BPM raisonnable
+        secondBeat = False      #utilisé pour amorcer le tableau de taux afin que nous démarrons avec un BPM raisonnable
 
-        IBI = 600               # int that holds the time interval between beats! Must be seeded!
-        Pulse = False           # "True" when User's live heartbeat is detected. "False" when not a "live beat". 
+        IBI = 600               #int qui contient l'intervalle de temps entre les battements ! Doit être ensemencé!
+        Pulse = False           #« True » lorsque le rythme cardiaque en direct de l'utilisateur est détecté. "False" quand ce n'est pas un "live beat". 
         lastTime = int(time.time()*1000)
         
         while not self.thread.stopped:
@@ -58,43 +58,43 @@ class Pulsesensor:
             N = sampleCounter - lastBeatTime
 
             # find the peak and trough of the pulse wave
-            if Signal < thresh and N > (IBI/5.0)*3:     # avoid dichrotic noise by waiting 3/5 of last IBI
-                if Signal < T:                          # T is the trough
-                    T = Signal                          # keep track of lowest point in pulse wave 
+            if Signal < thresh and N > (IBI/5.0)*3:     #évitez le bruit dichrotique en attendant les 3/5 du dernier IBI
+                if Signal < T:                          #T est le creux
+                    T = Signal                          #suivre le point le plus bas de l'onde de pouls 
 
             if Signal > thresh and Signal > P:
                 P = Signal
 
-            # signal surges up in value every time there is a pulse
-            if N > 250:                                 # avoid high frequency noise
+            #le signal augmente de valeur à chaque fois qu'il y a une impulsion
+            if N > 250:                                 #éviter le bruit à haute fréquence
                 if Signal > thresh and Pulse == False and N > (IBI/5.0)*3:       
-                    Pulse = True                        # set the Pulse flag when we think there is a pulse
-                    IBI = sampleCounter - lastBeatTime  # measure time between beats in mS
-                    lastBeatTime = sampleCounter        # keep track of time for next pulse
+                    Pulse = True                        #définir le drapeau Pulse lorsque nous pensons qu'il y a une impulsion
+                    IBI = sampleCounter - lastBeatTime  #mesurer le temps entre les battements en mS
+                    lastBeatTime = sampleCounter        #garder une trace du temps pour la prochaine impulsion
 
-                    if secondBeat:                      # if this is the second beat, if secondBeat == TRUE
-                        secondBeat = False;             # clear secondBeat flag
-                        for i in range(len(rate)):      # seed the running total to get a realisitic BPM at startup
+                    if secondBeat:                      #si c'est le deuxième temps, si secondBeat == TRUE
+                        secondBeat = False;             #effacer le drapeau secondBeat
+                        for i in range(len(rate)):      #semer le total cumulé pour obtenir un BPM réaliste au démarrage
                           rate[i] = IBI
 
-                    if firstBeat:                       # if it's the first time we found a beat, if firstBeat == TRUE
-                        firstBeat = False;              # clear firstBeat flag
-                        secondBeat = True;              # set the second beat flag
+                    if firstBeat:                       #si c'est la première fois qu'on trouve un beat, si firstBeat == TRUE
+                        firstBeat = False;              #effacer le drapeau firstBeat
+                        secondBeat = True;              #définir le deuxième indicateur de temps
                         continue
 
-                    # keep a running total of the last 10 IBI values  
-                    rate[:-1] = rate[1:]                # shift data in the rate array
-                    rate[-1] = IBI                      # add the latest IBI to the rate array
-                    runningTotal = sum(rate)            # add upp oldest IBI values
+                    #garder un total cumulé des 10 dernières valeurs IBI  
+                    rate[:-1] = rate[1:]                #décaler les données dans le tableau de taux
+                    rate[-1] = IBI                      #ajouter le dernier IBI au tableau des taux
+                    runningTotal = sum(rate)            #ajouter les valeurs IBI les plus anciennes
 
-                    runningTotal /= len(rate)           # average the IBI values 
-                    self.BPM = 60000/runningTotal       # how many beats can fit into a minute? that's BPM!
+                    runningTotal /= len(rate)           #faire la moyenne des valeurs IBI
+                    self.BPM = 60000/runningTotal       #combien de battements peuvent tenir dans une minute ? c'est le BPM !
 
-            if Signal < thresh and Pulse == True:       # when the values are going down, the beat is over
-                Pulse = False                           # reset the Pulse flag so we can do it again
-                amp = P - T                             # get amplitude of the pulse wave
-                thresh = amp/2 + T                      # set thresh at 50% of the amplitude
-                P = thresh                              # reset these for next time
+            if Signal < thresh and Pulse == True:       #quand les valeurs baissent, le rythme est terminé
+                Pulse = False                           #réinitialiser le drapeau Pulse afin que nous puissions le refaire
+                amp = P - T                             #obtenir l'amplitude de l'onde de pouls
+                thresh = amp/2 + T                      #régler le seuil à 50% de l'amplitude
+                P = thresh                              #réinitialisez-les pour la prochaine fois
                 T = thresh
 
             if N > 2500:                                #si 2,5 secondes s'écoulent sans un battement
