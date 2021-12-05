@@ -1,3 +1,8 @@
+import spidev             #installation de bibliothéque pour ADC
+spi = spidev.SpiDev()
+spi.open(bus, device)
+
+
 from spidev import SpiDev
 
 class MCP3008:
